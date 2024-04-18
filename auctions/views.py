@@ -71,8 +71,8 @@ def create_list(request):
         description = request.POST['description']
         starting_bid = request.POST['starting_bid']
         image_url = request.POST['image_url']
-        category = request.POST.get('category')
-        print(category)
+        categories = request.POST.getlist('category')
+
         created_by = request.user
         created_at = request.POST.get('created_at')
         auction_list = Auction_lists.objects.create(
@@ -84,11 +84,9 @@ def create_list(request):
             created_by=created_by, 
             created_at=created_at
             )
-        
-        category_id = Category.objects.filter(name=category).first() # get the category id
-        print(category_id)
-
-        auction_list.category.add(category_id)
+        for category in categories:
+            category_id = Category.objects.filter(name=category).first() # get the category id
+            auction_list.category.add(category_id)
         
         return HttpResponseRedirect(reverse("index"))
     return render(request, "auctions/create_list.html", context={

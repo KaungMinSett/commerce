@@ -19,9 +19,11 @@
         <label for="category">Category</label>
         <div class="form-group row ">
             <div class="col-4">
-            <select class="form-control" id="category" name="category">
+            <select class="form-control" id="category" name="category" multiple>
+            <option value=""></option>
                {% for category in categories %}
-                <option value = ""></option>
+
+
                 <option value="{{category}}">{{ category }}</option>
                 {% endfor %}
             </select>
