@@ -9,7 +9,8 @@ from .models import User, Auction_lists, Category
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+
+    return render(request, "auctions/index.html", context={"auctions": Auction_lists.objects.all()})
 
 
 def login_view(request):
@@ -70,18 +71,24 @@ def create_list(request):
         description = request.POST['description']
         starting_bid = request.POST['starting_bid']
         image_url = request.POST['image_url']
-        category = request.POST['category']
+        category = request.POST.get('category')
+        print(category)
         created_by = request.user
-        created_at = request.POST['created_at']
-        Auction_lists.objects.create(
+        created_at = request.POST.get('created_at')
+        auction_list = Auction_lists.objects.create(
             title=title, 
             description=description, 
             starting_bid=starting_bid, 
             image_url=image_url, 
-            category=category, 
+
             created_by=created_by, 
             created_at=created_at
             )
+        
+        category_id = Category.objects.filter(name=category).first() # get the category id
+        print(category_id)
+
+        auction_list.category.add(category_id)
         
         return HttpResponseRedirect(reverse("index"))
     return render(request, "auctions/create_list.html", context={

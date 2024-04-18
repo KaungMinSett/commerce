@@ -21,8 +21,8 @@
             <div class="col-4">
             <select class="form-control" id="category" name="category">
                {% for category in categories %}
-               <option value = ""></option>
-                <option value="f{{category}}">{{ category }}</option>
+                <option value = ""></option>
+                <option value="{{category}}">{{ category }}</option>
                 {% endfor %}
             </select>
             </div>

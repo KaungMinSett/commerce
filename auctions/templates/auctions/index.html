@@ -3,5 +3,11 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    <ul class="list-group">
+        {% for auction in auctions %}
+            <li class="list-group-item">
+                <a href="">{{ auction.title }}</a>
+
+            </li>
+        {% endfor %}
 {% endblock %}
