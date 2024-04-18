@@ -4,7 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Auction_lists, Category
+
 
 
 def index(request):
@@ -61,3 +62,43 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def create_list(request):
+    
+    if request.method == 'POST':
+        title = request.POST['title']
+        description = request.POST['description']
+        starting_bid = request.POST['starting_bid']
+        image_url = request.POST['image_url']
+        category = request.POST['category']
+        created_by = request.user
+        created_at = request.POST['created_at']
+        Auction_lists.objects.create(
+            title=title, 
+            description=description, 
+            starting_bid=starting_bid, 
+            image_url=image_url, 
+            category=category, 
+            created_by=created_by, 
+            created_at=created_at
+            )
+        
+        return HttpResponseRedirect(reverse("index"))
+    return render(request, "auctions/create_list.html", context={
+        'categories': Category.objects.all()
+    }
+    )
+
+
+def create_category(request):
+    if request.method == 'POST':
+        name = request.POST.get('category')
+        
+        try:
+            Category.objects.create(name=name)
+            return HttpResponseRedirect(reverse("create"))
+        except IntegrityError:
+            return render(request, "auctions/create_category.html", {
+                "error": "Category already exists."
+            })
+    return render(request, "auctions/create_category.html")
