@@ -1,0 +1,49 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <div class = col>
+        <div class = row-4>
+            <h4>Listing: {{ auction.title }}</h4>
+            {% if user.is_authenticated %}
+            <a href="{}" class="btn btn-primary" role="button">Add to Watchlist</a>
+            {% endif %}
+            <br>
+            {% if auction.image_url %}
+            
+            <img src="{{ auction.image_url }}" alt="image" class="img-fluid" style="width: 400px; height: 400px;">
+            {% else %}
+            <img src="https://t3.ftcdn.net/jpg/01/38/48/40/360_F_138484065_1enzXuW8NlkppNxSv4hVUrYoeF8qgoeY.jpg" alt="image" class="img-fluid" style="width: 300px; height: 300px;">
+            {% endif %}
+
+        </div>
+        <div class = row-8>
+           
+
+            <span><strong>Current Price:</strong> ${{ auction.starting_bid }}</span>
+            <br>
+            <br>
+            <p>{{ auction.description }}</p>
+            <br>
+            <Details>
+                <ul>
+
+            
+                    <li><small>Created at:{{ auction.created_at }} </small></li>
+                    {% if auction.category %}
+                    <li><small>Category: {{ category }}</small></li>
+                    {% else %}
+                    <li><small>Category: None</small></li>
+                    {% endif %}
+                    
+        
+                    
+                    <li><small>Created by:{{ auction.created_by }} </small></li>
+                </ul>
+            </Details>
+           
+        </div>
+            
+
+
+{% endblock %}

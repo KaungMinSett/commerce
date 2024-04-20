@@ -107,3 +107,12 @@ def create_category(request):
                 "error": "Category already exists."
             })
     return render(request, "auctions/create_category.html")
+
+
+def view_details(request, id):
+    auction = Auction_lists.objects.get(id=id)
+    category = Category.objects.filter(auctions=auction).first()
+    return render(request, "auctions/list_details.html", context={
+        'auction': auction,
+        'category': category
+    })

@@ -6,7 +6,7 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" name="title">
+            <input type="text" class="form-control" id="title" name="title" required>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
@@ -14,7 +14,7 @@
         </div>
         <div class="form-group">
             <label for="starting_bid">Starting Bid</label>
-            <input type="number" class="form-control" id="starting_bid" name="starting_bid">
+            <input type="number" class="form-control" id="starting_bid" name="starting_bid" required>
         </div>
         <label for="category">Category</label>
         <div class="form-group row ">
@@ -22,8 +22,6 @@
             <select class="form-control" id="category" name="category" multiple>
             <option value=""></option>
                {% for category in categories %}
-
-
                 <option value="{{category}}">{{ category }}</option>
                 {% endfor %}
             </select>
