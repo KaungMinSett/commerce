@@ -67,15 +67,27 @@ def register(request):
 def create_list(request):
     
     if request.method == 'POST':
-        title = request.POST['title']
-        description = request.POST['description']
-        starting_bid = request.POST['starting_bid']
-        image_url = request.POST['image_url']
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        starting_bid = request.POST.get('starting_bid')
+        if int(starting_bid) <= 0:
+            return render(request, "auctions/create_list.html", {
+                'categories': Category.objects.all(),
+                "error": "Starting bid should start from $1.00."
+            })
+        image_url = request.POST.get('image_url')
         categories = request.POST.getlist('category')
+    
+        if title == "" or title.strip() == "":
+             return render(request, "auctions/create_list.html", {
+                'categories': Category.objects.all(),
+                "error": "Please fill the title."
+            })
+        else:
 
-        created_by = request.user
-        created_at = request.POST.get('created_at')
-        auction_list = Auction_lists.objects.create(
+            created_by = request.user
+            created_at = request.POST.get('created_at')
+            auction_list = Auction_lists.objects.create(
             title=title, 
             description=description, 
             starting_bid=starting_bid, 
@@ -84,11 +96,13 @@ def create_list(request):
             created_by=created_by, 
             created_at=created_at
             )
-        for category in categories:
-            category_id = Category.objects.filter(name=category).first() # get the category id
-            auction_list.category.add(category_id)
+            for category in categories:
+                category_id = Category.objects.filter(name=category).first() # get the category id
+                auction_list.category.add(category_id)
         
-        return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("index"))
+    
+           
     return render(request, "auctions/create_list.html", context={
         'categories': Category.objects.all()
     }
