@@ -143,12 +143,12 @@ def view_details(request, id):
 def toggle_watchlist(request, id):
     auction = Auction_lists.objects.get(id=id)
     user = request.user
-    category = Category.objects.filter(auctions=auction).first()
+
     if Watchlists.objects.filter(user=request.user, auction=auction).exists():
 
         Watchlists.objects.filter(user=request.user, auction=auction).delete()
     else:
-        watchlist = Watchlists.objects.create(user=user, auction=auction)
+        Watchlists.objects.create(user=user, auction=auction)
     
     return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))
         
