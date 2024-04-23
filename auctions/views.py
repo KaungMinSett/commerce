@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Auction_lists, Category
+from .models import User, Auction_lists, Category, Watchlists
 
 
 
@@ -124,9 +124,39 @@ def create_category(request):
 
 
 def view_details(request, id):
+
     auction = Auction_lists.objects.get(id=id)
+    user = request.user
+
     category = Category.objects.filter(auctions=auction).first()
+    if Watchlists.objects.filter(user=user, auction=auction).exists():
+        status = True
+    else:
+        status = False
     return render(request, "auctions/list_details.html", context={
         'auction': auction,
-        'category': category
+        'category': category,
+        'status': status
     })
+
+
+def toggle_watchlist(request, id):
+    auction = Auction_lists.objects.get(id=id)
+    user = request.user
+    category = Category.objects.filter(auctions=auction).first()
+    if Watchlists.objects.filter(user=request.user, auction=auction).exists():
+
+        Watchlists.objects.filter(user=request.user, auction=auction).delete()
+    else:
+        watchlist = Watchlists.objects.create(user=user, auction=auction)
+    
+    return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))
+        
+
+
+
+    
+  
+
+
+    

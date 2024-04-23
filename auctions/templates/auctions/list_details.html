@@ -5,9 +5,12 @@
     <div class = col>
         <div class = row-4>
             <h4>Listing: {{ auction.title }}</h4>
-            {% if user.is_authenticated %}
-            <a href="{}" class="btn btn-primary" role="button">Add to Watchlist</a>
+            {% if user.is_authenticated and status is False %}
+            <a href="{% url 'watchlist' auction.id %}" class="btn btn-secondary btn-sm" role="button">Add to Watchlist</a>
+            {% elif user.is_authenticated and status is True %}
+            <a href="{% url 'watchlist' auction.id %}" class="btn btn-secondary btn-sm" role="button">Remove from Watchlist</a>
             {% endif %}
+            <br>
             <br>
             {% if auction.image_url %}
             
@@ -16,9 +19,10 @@
             <img src="https://t3.ftcdn.net/jpg/01/38/48/40/360_F_138484065_1enzXuW8NlkppNxSv4hVUrYoeF8qgoeY.jpg" alt="image" class="img-fluid" style="width: 300px; height: 300px;">
             {% endif %}
 
+
         </div>
         <div class = row-8>
-           
+           <br>
 
             <span><strong>Current Price:</strong> ${{ auction.starting_bid }}</span>
             <br>
