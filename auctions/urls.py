@@ -12,5 +12,6 @@ urlpatterns = [
     path('create/new_category', views.create_category, name='new_category'),
     path('/<int:id>', views.view_details, name='view_details'),
     path('/<int:id>/watchlist', views.toggle_watchlist, name='watchlist'),
+    path('/<int:id>/bid', views.place_bid, name='bid'),
 ]
 

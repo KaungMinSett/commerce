@@ -26,6 +26,36 @@
 
             <span><strong>Current Price:</strong> ${{ auction.starting_bid }}</span>
             <br>
+            {% if user.is_authenticated %}
+            <form action="{% url 'bid' auction.id %}" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="bid">2 bids so far: last bider  </label>
+                    {% if bidder_name is None  %}
+                    <strong>None</strong>
+                    <input type="number" class="form-control"  name="current_bid" required>
+                    {% else %}
+                    <strong>{{ bidder_name }}</strong>
+                    <input type="number" class="form-control"  name="current_bid" required>
+                    {% endif %}
+                    
+              
+                
+            </div>
+            <div class = "form-group">
+                <button type="submit" class="btn btn-primary">Place Bid</button>
+            </div>
+        
+        </form>
+        {% endif %}
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+          
+        
             <br>
             <p>{{ auction.description }}</p>
             <br>

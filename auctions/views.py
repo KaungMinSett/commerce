@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Auction_lists, Category, Watchlists
+from .models import User, Auction_lists, Category, Watchlists, Bids
 
 
 
@@ -127,6 +127,13 @@ def view_details(request, id):
 
     auction = Auction_lists.objects.get(id=id)
     user = request.user
+    last_bidder = Bids.objects.filter(auction=auction).last()
+    if last_bidder is None:
+        bidder_name = None
+    else:
+        bidder_name = last_bidder.user
+    
+
 
     category = Category.objects.filter(auctions=auction).first()
     if Watchlists.objects.filter(user=user, auction=auction).exists():
@@ -136,7 +143,8 @@ def view_details(request, id):
     return render(request, "auctions/list_details.html", context={
         'auction': auction,
         'category': category,
-        'status': status
+        'status': status,
+        'last_bidder': bidder_name,
     })
 
 
@@ -155,7 +163,19 @@ def toggle_watchlist(request, id):
 
 
 
-    
+def place_bid(request,id):
+    user = request.user
+    auction = Auction_lists.objects.get(id=id)
+    bid = request.POST.get('current_bid')
+    if int(bid) <= auction.starting_bid:
+        return render(request, "auctions/list_details.html", {
+            'auction': auction,
+            'error': "Your bid should be higher than the starting bid."
+        })
+    else:
+        Bids.objects.create(user=user, auction=auction, bid=bid)
+        Auction_lists.objects.filter(id=id).update(starting_bid=bid)
+        return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))
   
 
 
