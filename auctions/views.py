@@ -8,6 +8,7 @@ from .models import User, Auction_lists, Category, Watchlists, Bids
 
 
 
+
 def index(request):
 
     return render(request, "auctions/index.html", context={"auctions": Auction_lists.objects.all()})
@@ -63,6 +64,7 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
 
 def create_list(request):
     
@@ -128,11 +130,11 @@ def view_details(request, id):
     auction = Auction_lists.objects.get(id=id)
     user = request.user
     last_bidder = Bids.objects.filter(auction=auction).last()
+   
     if last_bidder is None:
         bidder_name = None
     else:
         bidder_name = last_bidder.user
-    
 
 
     category = Category.objects.filter(auctions=auction).first()
@@ -140,6 +142,7 @@ def view_details(request, id):
         status = True
     else:
         status = False
+
     return render(request, "auctions/list_details.html", context={
         'auction': auction,
         'category': category,
@@ -159,6 +162,8 @@ def toggle_watchlist(request, id):
         Watchlists.objects.create(user=user, auction=auction)
     
     return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))
+
+
         
 
 
@@ -170,6 +175,7 @@ def place_bid(request,id):
     if int(bid) <= auction.starting_bid:
         return render(request, "auctions/list_details.html", {
             'auction': auction,
+            'last_bidder': Bids.objects.filter(auction=auction).last().user,
             'error': "Your bid should be higher than the starting bid."
         })
     else:
@@ -179,4 +185,8 @@ def place_bid(request,id):
   
 
 
-    
+def close_auction(request, id):
+    auction = Auction_lists.objects.get(id=id)
+    auction.is_active = False
+    auction.save()
+    return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))

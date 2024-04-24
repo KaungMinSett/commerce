@@ -26,29 +26,47 @@
 
             <span><strong>Current Price:</strong> ${{ auction.starting_bid }}</span>
             <br>
-            {% if user.is_authenticated %}
-            <form action="{% url 'bid' auction.id %}" method="post">
-            {% csrf_token %}
 
-            <div class="form-group">
-                <label for="bid">2 bids so far: last bider  </label>
-                    {% if bidder_name is None  %}
+            <div>
+                <label for="bid"> last bider :  </label>
+                 {% if last_bidder is None %}   
                     <strong>None</strong>
-                    <input type="number" class="form-control"  name="current_bid" required>
-                    {% else %}
-                    <strong>{{ bidder_name }}</strong>
-                    <input type="number" class="form-control"  name="current_bid" required>
-                    {% endif %}
-                    
+                {% else %}
+                    <strong>{{ last_bidder }}</strong>
+                {% endif %}
               
                 
             </div>
-            <div class = "form-group">
-                <button type="submit" class="btn btn-primary">Place Bid</button>
-            </div>
+
+            {% if user.is_authenticated  %}
+            <form action="{% url 'bid' auction.id %}" method="post">
+            {% csrf_token %}
+
+
+
+                {% if auction.is_active %}
+                {% if user.id == auction.created_by_id  %}
+                <div class = "form-group">
+                    <a href="{% url 'close_auction' auction.id %}" class="btn btn-primary btn-sm" role="button">Close Bid</a>
+
+                </div>
+                {% else %}
+                 <div class = "form-group">
+                    <input type="number" class="form-control"  name="current_bid" required>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Place Bid</button>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class = "form-group">
+                    <label for="bid">Winner:  </label>
+                    <strong>{{ last_bidder }}</strong>
+                </div>
+                {% endif %}
         
-        </form>
-        {% endif %}
+            </form>
+            {% endif %}
+            
         {% if error %}
         <div class="alert alert-danger" role="alert">
             {{ error }}
@@ -72,7 +90,7 @@
                     
         
                     
-                    <li><small>Created by:{{ auction.created_by }} </small></li>
+                    <li><small>Listed by:{{ auction.created_by }} </small></li>
                 </ul>
             </Details>
            
