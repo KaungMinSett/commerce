@@ -173,9 +173,14 @@ def place_bid(request,id):
     auction = Auction_lists.objects.get(id=id)
     bid = request.POST.get('current_bid')
     if int(bid) <= auction.starting_bid:
+        last_bidder = Bids.objects.filter(auction=auction).last()
+        if last_bidder is None:
+            bidder_name = None
+        else:
+            bidder_name = last_bidder.user
         return render(request, "auctions/list_details.html", {
             'auction': auction,
-            'last_bidder': Bids.objects.filter(auction=auction).last().user,
+            'last_bidder': bidder_name,
             'error': "Your bid should be higher than the starting bid."
         })
     else:
