@@ -229,6 +229,7 @@ def view_categories(request):
 def viewby_category(request, id):
     category = Category.objects.get(id=id)
     auctions = Auction_lists.objects.filter(category=category)
+    print(auctions)
     return render(request, "auctions/list_by_category.html", context={
         'auctions': auctions,
         'category': category
