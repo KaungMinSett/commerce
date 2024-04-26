@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Auction_lists, Category, Watchlists, Bids
+from .models import User, Auction_lists, Category, Watchlists, Bids, Comments
 
 
 
@@ -142,12 +142,15 @@ def view_details(request, id):
         status = True
     else:
         status = False
+    
+    comments = Comments.objects.filter(auction=auction)
 
     return render(request, "auctions/list_details.html", context={
         'auction': auction,
         'category': category,
         'status': status,
         'last_bidder': bidder_name,
+        'comments': comments,
     })
 
 
@@ -194,4 +197,12 @@ def close_auction(request, id):
     auction = Auction_lists.objects.get(id=id)
     auction.is_active = False
     auction.save()
+    return HttpResponseRedirect(reverse("view_details", args=(auction.id)))
+
+def add_comment(request, id):
+    auction = Auction_lists.objects.get(id=id)
+    user = request.user
+    comment = request.POST.get('comment')
+    Comments.objects.create(user=user, auction=auction, comment=comment)
     return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))
+

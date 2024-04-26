@@ -1,33 +1,51 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    <h4>Listing: {{ auction.title }}</h4>
+    {% if user.is_authenticated and status is False %}
+        <a href="{% url 'watchlist' auction.id %}" class="btn btn-secondary btn-sm" role="button">Add to Watchlist</a>
+    {% elif user.is_authenticated and status is True %}
+        <a href="{% url 'watchlist' auction.id %}" class="btn btn-secondary btn-sm" role="button">Remove from Watchlist</a>
+    {% endif %}
+    <br>
+    <br>
 
-    <div class = col>
-        <div class = row-4>
-            <h4>Listing: {{ auction.title }}</h4>
-            {% if user.is_authenticated and status is False %}
-            <a href="{% url 'watchlist' auction.id %}" class="btn btn-secondary btn-sm" role="button">Add to Watchlist</a>
-            {% elif user.is_authenticated and status is True %}
-            <a href="{% url 'watchlist' auction.id %}" class="btn btn-secondary btn-sm" role="button">Remove from Watchlist</a>
-            {% endif %}
-            <br>
-            <br>
+    <div class = row>
+        <div class = col-4>
+            
             {% if auction.image_url %}
             
             <img src="{{ auction.image_url }}" alt="image" class="img-fluid" style="width: 400px; height: 400px;">
             {% else %}
             <img src="https://t3.ftcdn.net/jpg/01/38/48/40/360_F_138484065_1enzXuW8NlkppNxSv4hVUrYoeF8qgoeY.jpg" alt="image" class="img-fluid" style="width: 300px; height: 300px;">
             {% endif %}
-
-
         </div>
-        <div class = row-8>
+        <div class = col-8>
+            <p>{{ auction.description}}</p>
+        </div>
+        <div class = col-12>
+            <Details>
+                <ul>
+
+            
+                    <li><small>Created at:{{ auction.created_at }} </small></li>
+                    {% if auction.category %}
+                    <li><small>Category: {{ category }}</small></li>
+                    {% else %}
+                    <li><small>Category: None</small></li>
+                    {% endif %}
+                    
+        
+                    
+                    <li><small>Listed by:{{ auction.created_by }} </small></li>
+                </ul>
+            </Details>
            <br>
 
             <span><strong>Current Price:</strong> ${{ auction.starting_bid }}</span>
             <br>
 
-            <div>
+
                 <label for="bid"> last bider :  </label>
                  {% if last_bidder is None %}   
                     <strong>None</strong>
@@ -36,7 +54,7 @@
                 {% endif %}
               
                 
-            </div>
+
 
             {% if user.is_authenticated  %}
             <form action="{% url 'bid' auction.id %}" method="post">
@@ -65,6 +83,24 @@
                 {% endif %}
         
             </form>
+
+            <form action="{% url 'comment' auction.id %}" method="post">
+            {% csrf_token %}
+            <div class = "form-group">
+
+                <textarea class="form-control" name="comment" placeholder="write comment" required></textarea>
+                <br>
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </div>
+            </form>
+            <details>
+                <summary>Comments</summary>
+                <ul>
+                    {% for comment in comments %}
+                    <li><small>{{ comment.created_at }} by {{ comment.user }}: {{ comment.comment }}</small></li>
+                    {% endfor %}
+                </ul>
+            </details>
             {% endif %}
             
         {% if error %}
@@ -74,25 +110,8 @@
         {% endif %}
           
         
-            <br>
-            <p>{{ auction.description }}</p>
-            <br>
-            <Details>
-                <ul>
-
-            
-                    <li><small>Created at:{{ auction.created_at }} </small></li>
-                    {% if auction.category %}
-                    <li><small>Category: {{ category }}</small></li>
-                    {% else %}
-                    <li><small>Category: None</small></li>
-                    {% endif %}
-                    
-        
-                    
-                    <li><small>Listed by:{{ auction.created_by }} </small></li>
-                </ul>
-            </Details>
+            </div>
+           
            
         </div>
             
