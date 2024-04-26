@@ -214,11 +214,15 @@ def watchlist(request):
     auction_ids = [watchlist.auction_id for watchlist in watchlists] # get related auction ids from watchlist
     auctions = Auction_lists.objects.filter(id__in=auction_ids) # get auction objects using auction ids
     
-
-
-    
     return render(request, "auctions/watch_list.html", context={
         'auctions': auctions
 
         
     })
+
+def view_categories(request):
+    categories = Category.objects.all()
+    return render(request, "auctions/categories.html", context={
+        'categories': categories
+    })
+
