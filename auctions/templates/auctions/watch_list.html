@@ -1,0 +1,36 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h3>{{ user.username }}'s Watchlist</h3>
+
+<ul class ='list-group'>
+    {% for auction in auctions %}
+    <a href = "{% url 'view_details' auction.id %}" style="text-decoration: none; color: black;">
+    <li class="list-group-item">
+        <div class = row>
+            <div class = col-4>
+                {% if auction.image_url %}
+                <img src="{{ auction.image_url }}" alt="image" class="img-fluid" style="width: 300px; height: 300px;">
+                {% else %}
+                <img src="https://t3.ftcdn.net/jpg/01/38/48/40/360_F_138484065_1enzXuW8NlkppNxSv4hVUrYoeF8qgoeY.jpg" alt="image" class="img-fluid" style="width: 300px; height: 300px;">
+                {% endif %}
+            </div>
+            <div class = col-8>
+                <h4>{{ auction.title }}</h4>
+
+                <span><strong>Price:</strong> ${{ auction.starting_bid }}</span>
+                <br>
+                <br>
+                <p>{{ auction.description }}</p>
+
+                <p><small>Created at:{{ auction.created_at }} </small></p>
+
+            </div>
+        </li>
+        <br>
+    </a>
+    {% endfor %}
+</ul>
+
+{% endblock %}

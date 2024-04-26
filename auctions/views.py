@@ -11,7 +11,8 @@ from .models import User, Auction_lists, Category, Watchlists, Bids, Comments
 
 def index(request):
 
-    return render(request, "auctions/index.html", context={"auctions": Auction_lists.objects.all()})
+
+    return render(request, "auctions/index.html", context={"auctions": Auction_lists.objects.all().order_by('-created_at')})
 
 
 def login_view(request):
@@ -197,7 +198,7 @@ def close_auction(request, id):
     auction = Auction_lists.objects.get(id=id)
     auction.is_active = False
     auction.save()
-    return HttpResponseRedirect(reverse("view_details", args=(auction.id)))
+    return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))
 
 def add_comment(request, id):
     auction = Auction_lists.objects.get(id=id)
@@ -206,3 +207,18 @@ def add_comment(request, id):
     Comments.objects.create(user=user, auction=auction, comment=comment)
     return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))
 
+
+def watchlist(request):
+    user = request.user
+    watchlists = Watchlists.objects.filter(user=user)  #get query set objects
+    auction_ids = [watchlist.auction_id for watchlist in watchlists] # get related auction ids from watchlist
+    auctions = Auction_lists.objects.filter(id__in=auction_ids) # get auction objects using auction ids
+    
+
+
+    
+    return render(request, "auctions/watch_list.html", context={
+        'auctions': auctions
+
+        
+    })
