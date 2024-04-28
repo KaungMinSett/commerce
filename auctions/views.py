@@ -138,7 +138,7 @@ def view_details(request, id):
         bidder_name = last_bidder.user
 
 
-    category = Category.objects.filter(auctions=auction).first()
+    category = Category.objects.filter(auctions=auction)
     if Watchlists.objects.filter(user=user, auction=auction).exists():
         status = True
     else:
@@ -148,7 +148,7 @@ def view_details(request, id):
 
     return render(request, "auctions/list_details.html", context={
         'auction': auction,
-        'category': category,
+        'categories': category,
         'status': status,
         'last_bidder': bidder_name,
         'comments': comments,
@@ -229,7 +229,7 @@ def view_categories(request):
 def viewby_category(request, id):
     category = Category.objects.get(id=id)
     auctions = Auction_lists.objects.filter(category=category)
-    print(auctions)
+
     return render(request, "auctions/list_by_category.html", context={
         'auctions': auctions,
         'category': category

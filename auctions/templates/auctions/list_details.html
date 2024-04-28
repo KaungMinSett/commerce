@@ -30,7 +30,13 @@
             
                     <li><small>Created at:{{ auction.created_at }} </small></li>
                     {% if auction.category %}
-                    <li><small>Category: {{ category }}</small></li>
+                    <li>
+                    Category: 
+                    {% for category in categories %}
+                   
+                    <span class="badge badge-info"> {{ category }}</span>
+                    {% endfor %}
+                </li>
                     {% else %}
                     <li><small>Category: None</small></li>
                     {% endif %}
