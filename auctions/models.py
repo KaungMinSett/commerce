@@ -26,18 +26,18 @@ class Auction_lists(models.Model):
  
 
 class Bids(models.Model):
-    auction = models.ForeignKey(Auction_lists, on_delete=models.CASCADE, related_name="bids")
+    auction = models.ForeignKey(Auction_lists, on_delete=models.CASCADE, related_name="bidders")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     bid = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Comments(models.Model):
-    auction = models.ForeignKey(Auction_lists, on_delete=models.CASCADE, related_name="comments")
+    auction = models.ForeignKey(Auction_lists, on_delete=models.CASCADE, related_name="commenters")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     comment = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Watchlists(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlists")
-    auction = models.ForeignKey(Auction_lists, on_delete=models.CASCADE, related_name="watchlists")
+    auction = models.ForeignKey(Auction_lists, on_delete=models.CASCADE, related_name="watchedby")
     created_at = models.DateTimeField(auto_now_add=True)
