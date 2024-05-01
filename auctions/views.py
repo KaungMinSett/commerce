@@ -125,20 +125,22 @@ def create_category(request):
             })
     return render(request, "auctions/create_category.html")
 
+def get_bidder(id):
+    auction = Auction_lists.objects.get(id=id)
+    last_bidder = Bids.objects.filter(auction=auction).last()
+    if last_bidder is None:
+        bidder_name = None
+    else:
+        bidder_name = last_bidder.user
+    return bidder_name
 
 def view_details(request, id):
 
     auction = Auction_lists.objects.get(id=id)
     user = request.user
-    last_bidder = Bids.objects.filter(auction=auction).last()
-   
-    if last_bidder is None:
-        bidder_name = None
-    else:
-        bidder_name = last_bidder.user
+    bidder_name = get_bidder(id)
 
 
-    category = Category.objects.filter(auctions=auction)
     if Watchlists.objects.filter(user=user, auction=auction).exists():
         status = True
     else:
@@ -148,7 +150,7 @@ def view_details(request, id):
 
     return render(request, "auctions/list_details.html", context={
         'auction': auction,
-        'categories': category,
+        'categories': auction.category.all(),
         'status': status,
         'last_bidder': bidder_name,
         'comments': comments,
@@ -177,11 +179,7 @@ def place_bid(request,id):
     auction = Auction_lists.objects.get(id=id)
     bid = request.POST.get('current_bid')
     if int(bid) <= auction.starting_bid:
-        last_bidder = Bids.objects.filter(auction=auction).last()
-        if last_bidder is None:
-            bidder_name = None
-        else:
-            bidder_name = last_bidder.user
+        bidder_name = get_bidder(id)
         return render(request, "auctions/list_details.html", {
             'auction': auction,
             'last_bidder': bidder_name,
@@ -195,9 +193,15 @@ def place_bid(request,id):
 
 
 def close_auction(request, id):
-    auction = Auction_lists.objects.get(id=id)
-    auction.is_active = False
-    auction.save()
+    if request.user == Auction_lists.objects.get(id=id).created_by:
+        auction = Auction_lists.objects.get(id=id)
+        auction.is_active = False
+        auction.save()
+    else:
+        return render(request, "auctions/list_details.html", {
+
+            'error': "You are not authorized to close this auction."
+        })
     return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))
 
 def add_comment(request, id):

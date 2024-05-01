@@ -31,7 +31,7 @@
                     <li><small>Created at:{{ auction.created_at }} </small></li>
                     {% if auction.category %}
                     <li>
-                    Category: 
+                    <small>Category:  </small>
                     {% for category in categories %}
                    
                     <span class="badge badge-info"> {{ category }}</span>
@@ -63,24 +63,25 @@
 
 
             {% if user.is_authenticated  %}
-            <form action="{% url 'bid' auction.id %}" method="post">
-            {% csrf_token %}
-
-
 
                 {% if auction.is_active %}
-                {% if user.id == auction.created_by_id  %}
-                <div class = "form-group">
-                    <a href="{% url 'close_auction' auction.id %}" class="btn btn-primary btn-sm" role="button">Close Bid</a>
+                    {% if user.id == auction.created_by_id  %}
+                     <div class = "form-group">
+                         <a href="{% url 'close_auction' auction.id %}" class="btn btn-primary btn-sm" role="button">Close Bid</a>
 
-                </div>
-                {% else %}
-                 <div class = "form-group">
-                    <input type="number" class="form-control"  name="current_bid" required>
-                    <br>
-                    <button type="submit" class="btn btn-primary">Place Bid</button>
-                </div>
-                {% endif %}
+                    </div>
+                    {% else %}
+            
+                    <form action="{% url 'bid' auction.id %}" method="post">
+                        {% csrf_token %}
+                
+                        <div class = "form-group">
+                            <input type="number" class="form-control"  name="current_bid" required>
+                            <br>
+                            <button type="submit" class="btn btn-primary">Place Bid</button>
+                        </div>
+                    </form>
+                    {% endif %}
                 {% else %}
                 <div class = "form-group">
                     <label for="bid">Winner:  </label>
@@ -88,17 +89,18 @@
                 </div>
                 {% endif %}
         
-            </form>
+           
 
             <form action="{% url 'comment' auction.id %}" method="post">
-            {% csrf_token %}
-            <div class = "form-group">
+                {% csrf_token %}
+                <div class = "form-group">
 
-                <textarea class="form-control" name="comment" placeholder="write comment" required></textarea>
-                <br>
-                <button type="submit" class="btn btn-primary">Post Comment</button>
-            </div>
+                    <textarea class="form-control" name="comment" placeholder="write comment" required></textarea>
+                    <br>
+                    <button type="submit" class="btn btn-primary btn-sm">Post Comment</button>
+                </div>
             </form>
+            
             <details>
                 <summary>Comments</summary>
                 <ul>
@@ -116,10 +118,7 @@
         {% endif %}
           
         
-            </div>
-           
-           
-        </div>
+
             
 
 
