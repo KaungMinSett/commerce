@@ -24,7 +24,7 @@ class Auction_lists(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f" {self.title} at {self.starting_bid} by {self.created_by}"
+        return f" {self.title}"
 
  
 
@@ -35,7 +35,7 @@ class Bids(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.bid} by {self.user} on {self.auction}"
+        return f"{self.auction}"
 
 class Comments(models.Model):
     auction = models.ForeignKey(Auction_lists, on_delete=models.CASCADE, related_name="commenters")
