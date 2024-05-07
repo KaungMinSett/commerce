@@ -29,16 +29,15 @@
 
             
                     <li><small>Created at:{{ auction.created_at }} </small></li>
-                    {% if auction.category %}
+                    {% if auction.categories %}
                     <li>
-                    <small>Category:  </small>
-                    {% for category in categories %}
-                   
-                    <span class="badge badge-info"> {{ category }}</span>
-                    {% endfor %}
-                </li>
+                        <small>Category:  </small>
+                        {% for category in categories %}
+                            <span class="badge badge-info"> {{ category }}</span>
+                        {% endfor %}
+                    </li>
                     {% else %}
-                    <li><small>Category: None</small></li>
+                        <li><small>Category: <span class="badge badge-info"> None</span></small></li>
                     {% endif %}
                     
         
