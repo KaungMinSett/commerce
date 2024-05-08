@@ -8,6 +8,15 @@
         <div>{{ message }}</div>
     {% endif %}
 
+    {% if next %}
+        {% if user.is_authenticated %}
+        <p>You doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+        {% else %}
+        <p>Please login to see this page.</p>
+        {% endif %}
+    {% endif %}
+
     <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
@@ -17,6 +26,7 @@
             <input class="form-control" type="password" name="password" placeholder="Password">
         </div>
         <input class="btn btn-primary" type="submit" value="Login">
+        <input type="hidden" name="next" value="{{ next }}">
     </form>
 
     Don't have an account? <a href="{% url 'register' %}">Register here.</a>

@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from .models import User, Auction_lists, Category, Watchlists, Bids, Comments
 
@@ -67,6 +68,7 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+@login_required
 def create_list(request):
     
     if request.method == 'POST':
@@ -112,6 +114,7 @@ def create_list(request):
     )
 
 
+@login_required
 def create_category(request):
     if request.method == 'POST':
         name = request.POST.get('category')
@@ -134,6 +137,9 @@ def get_bidder(id):
         bidder_name = last_bidder.user
     return bidder_name
 
+
+
+@login_required(login_url="/login")
 def view_details(request, id):
 
     auction = Auction_lists.objects.get(id=id)
@@ -213,6 +219,7 @@ def add_comment(request, id):
     return HttpResponseRedirect(reverse("view_details", args=(auction.id,)))
 
 
+@login_required(login_url="/login")
 def watchlist(request):
     user = request.user
     watchlists = Watchlists.objects.filter(user=user)  #get query set objects
@@ -225,12 +232,15 @@ def watchlist(request):
         
     })
 
+@login_required(login_url="/login")
 def view_categories(request):
     categories = Category.objects.all()
     return render(request, "auctions/categories.html", context={
         'categories': categories
     })
 
+
+@login_required(login_url="/login")
 def viewby_category(request, id):
     category = Category.objects.get(id=id)
     auctions = Auction_lists.objects.filter(category=category)
