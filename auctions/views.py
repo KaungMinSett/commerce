@@ -154,6 +154,7 @@ def view_details(request, id):
     
     comments = Comments.objects.filter(auction=auction)
     
+   
 
     return render(request, "auctions/list_details.html", context={
         'auction': auction,
