@@ -11,3 +11,15 @@ blocks:
         - name: 'Job #1'
           commands:
             - checkout
+  - name: Tests
+    task:
+      prologue:
+        commands:
+          - checkout
+      jobs:
+        - name: Unit Tests
+          commands:
+            - echo "Unit Tests..."
+        - name: Integration Tests
+          commands:
+            - echo "Integration Tests..."
