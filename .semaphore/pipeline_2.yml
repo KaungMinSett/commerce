@@ -11,3 +11,6 @@ blocks:
         - name: Deploy
           commands:
             - echo "Deploying to staging..."
+        - name: Deploy2
+          commands:
+            - echo "deploying again..."
