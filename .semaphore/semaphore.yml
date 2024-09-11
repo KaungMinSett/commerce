@@ -8,7 +8,7 @@ blocks:
   - name: 'Install dependencies '
     task:
       jobs:
-        - name: install lib
+        - name: pip
           commands:
             - echo "installing req.."
   - name: Tests
