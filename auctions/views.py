@@ -78,7 +78,7 @@ def create_list(request):
         if int(starting_bid) <= 0:
             return render(request, "auctions/create_list.html", {
                 'categories': Category.objects.all(),
-                "error": "Starting bid should start from $1.00."
+                "error": "Starting bid should start from $2.00."
             })
         image_url = request.POST.get('image_url')
         categories = request.POST.getlist('category')
